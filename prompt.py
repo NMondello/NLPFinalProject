@@ -2,7 +2,6 @@ import openai
 import time
 
 # Set up API key
-openai.api_key = 'YOUR_API_KEY'
 
 def get_model_response(prompt):
     try:
