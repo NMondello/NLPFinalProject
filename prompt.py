@@ -3,9 +3,14 @@ import time
 import apikey
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.feature_extraction.text import CountVectorizer
 
+stop_list = ["a", "an", "the", "is", "are", "of", "for", "in", "on", "to", "and", "with", "that", "this", "these", "those", "it", "as", "at", "by", "be", "or", "not", "from", "but", "have", "has", "should", "would", "could", "can", "will", "may", "might", "must", "about", "over", "under", "above", "below", "between", "among", "through", "into", "onto", "up", "down", "off", "out", "around", "after", "before", "during", "since", "while", "if", "then", "else", "when", "where", "why", "how", "what", "which", "who", "whom", "whose", "whether", "either", "neither", "both", "each", "every", "any", "all", "some", "many", "few", "several", "most", "more", "less", "least", "such", "own", "other", "another", "same", "different", "new", "old", "ceo", "ceos", "organization"]
 
 def get_model_response(promptQ):
+    """
+    Query the chatGPT model with a prompt and return the response
+    """
     response = apikey.client.chat.completions.create(
     messages=[{
         "role": "user",
@@ -16,14 +21,15 @@ def get_model_response(promptQ):
     return response.choices[0].message.content
 
 
-#We can either feed this prompt into the api and parse it, or do it manuall with the chat.
-start_prompt = "Produce 50 different ways of saying 'What is the most important meal of the day?'"
+#We can either feed this prompt into the api and parse it, or do it manually with the chat.
+# start_prompt = "Produce 50 different ways of saying 'What is the most important meal of the day?'"
+start_prompt = "Produce 2 different ways of saying 'What is the most important meal of the day?'"
 
 
 #Prompts produced by chatGPT
 prompts = [
     "What are the key qualities that define a CEO?",
-    "Which qualities are most important for a CEO?",
+    "Which qualities are most important for a CEO?"
     "What are the essential traits of a successful CEO?",
     "What characteristics are common among CEOs?",
     "What are the main skills a CEO should have?",
@@ -114,7 +120,8 @@ It’s never too early to start the CEO succession planning process—even if yo
 As you create your succession plan, use these ten qualities as a foundation for future candidates, and then build out your leadership pipeline with similar dimensions in mind for future senior leadership positions. Focusing on the leadership pipeline now will help create organizational stability, business continuity, and long-term growth."""
 
 results = []
-
+all_responses = []
+# use list of prompts to query model and group responses by prompt, response
 for prompt in prompts:
     result = get_model_response(prompt)
     if result:
@@ -122,11 +129,30 @@ for prompt in prompts:
             "prompt": prompt,
             "response": result
         })
-    time.sleep(1)  
+        all_responses.append(result)
+   
+    time.sleep(1)
+print(results)  
 
-
+# calculate cosine similarity between each response and the reference answer
 for entry in results:
     vectorizer = TfidfVectorizer()
     tfidf_matrix = vectorizer.fit_transform([entry['response'], referenceAnswer])
     cosine_sim = cosine_similarity(tfidf_matrix[0:1], tfidf_matrix[1:2])
     print(f"Prompt: {entry['prompt']}\nResponse: {entry['response']}\nTotal Characters: {len(entry['response'])}\nCosine Sim: {cosine_sim}")
+
+# calculate term frequency across all responses
+count_vectorizer = CountVectorizer(stop_words=stop_list)
+term_freq_matrix = count_vectorizer.fit_transform(all_responses)
+term_freq = term_freq_matrix.sum(axis=0)
+terms = count_vectorizer.get_feature_names()
+term_freq_dict = {terms[i]: term_freq[0, i] for i in range(len(terms))}
+
+sorted_tf = sorted(term_freq_dict.items(), key=lambda x: x[1], reverse=True)
+print("Top 15 terms by term frequency:")
+for term, freq in sorted_tf[:15]:
+    print(f"{term}: {freq}")
+
+# other ideas
+    # should refernce answer just be the answer of the question WE phrased?
+    # move for entry in results into for prompt in prompts loop to avoid 2 loops
