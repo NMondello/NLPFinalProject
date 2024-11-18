@@ -131,8 +131,7 @@ for prompt in prompts:
         })
         all_responses.append(result)
    
-    time.sleep(1)
-print(results)  
+    time.sleep(1) 
 
 # calculate cosine similarity between each response and the reference answer
 for entry in results:
@@ -149,7 +148,7 @@ terms = count_vectorizer.get_feature_names()
 term_freq_dict = {terms[i]: term_freq[0, i] for i in range(len(terms))}
 
 sorted_tf = sorted(term_freq_dict.items(), key=lambda x: x[1], reverse=True)
-print("Top 15 terms by term frequency:")
+print("\nTop 15 terms by term frequency:")
 for term, freq in sorted_tf[:15]:
     print(f"{term}: {freq}")
 
