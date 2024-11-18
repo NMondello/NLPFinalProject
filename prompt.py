@@ -143,8 +143,8 @@ for entry in results:
 # calculate term frequency across all responses
 count_vectorizer = CountVectorizer(stop_words=stop_list)
 term_freq_matrix = count_vectorizer.fit_transform(all_responses)
-term_freq = term_freq_matrix.sum(axis=0)
-terms = count_vectorizer.get_feature_names()
+term_freq = term_freq_matrix.sum(axis=0) #  axis = 0 means sum along columns of matrix, which is term freq across all documents
+terms = count_vectorizer.get_feature_names() # list of terms
 term_freq_dict = {terms[i]: term_freq[0, i] for i in range(len(terms))}
 
 sorted_tf = sorted(term_freq_dict.items(), key=lambda x: x[1], reverse=True)
