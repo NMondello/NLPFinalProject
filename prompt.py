@@ -22,8 +22,8 @@ def get_model_response(promptQ):
 
 
 #We can either feed this prompt into the api and parse it, or do it manually with the chat.
-# start_prompt = "Produce 50 different ways of saying 'What is the most important meal of the day?'"
-start_prompt = "Produce 2 different ways of saying 'What is the most important meal of the day?'"
+start_prompt = "Produce 50 different ways of saying 'What is the most important meal of the day?'"
+# start_prompt = "Produce 2 different ways of saying 'What is the most important meal of the day?'"
 
 
 #Prompts produced by chatGPT
@@ -138,8 +138,13 @@ for entry in results:
     vectorizer = TfidfVectorizer()
     tfidf_matrix = vectorizer.fit_transform([entry['response'], referenceAnswer])
     cosine_sim = cosine_similarity(tfidf_matrix[0:1], tfidf_matrix[1:2])
-    print(f"Prompt: {entry['prompt']}\nResponse: {entry['response']}\nTotal Characters: {len(entry['response'])}\nCosine Sim: {cosine_sim}")
+    #print(f"Prompt: {entry['prompt']}\nResponse: {entry['response']}\nTotal Characters: {len(entry['response'])}\nCosine Sim: {cosine_sim}")
+    entry['cosine_sim'] = cosine_sim # add cosine similarity to entry dict
 
+results = sorted(results, key=lambda x: x['cosine_sim'], reverse=True)
+print("\nTop 5 responses by cosine similarity to reference answer:")
+for entry in results[:5]:
+    print(f"Prompt: {entry['prompt']}\nResponse: {entry['response']}\nTotal Characters: {len(entry['response'])}\nCosine Sim: {entry['cosine_sim']}")
 # calculate term frequency across all responses
 count_vectorizer = CountVectorizer(stop_words=stop_list)
 term_freq_matrix = count_vectorizer.fit_transform(all_responses)
