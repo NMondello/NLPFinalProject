@@ -1,3 +1,4 @@
+#NLP Final Project Leah West and Nick Mondello
 import openai
 import time
 import apikey
@@ -7,6 +8,9 @@ from sklearn.feature_extraction.text import CountVectorizer
 
 stop_list = ["a", "an", "the", "is", "are", "of", "for", "in", "on", "to", "and", "with", "that", "this", "these", "those", "it", "as", "at", "by", "be", "or", "not", "from", "but", "have", "has", "should", "would", "could", "can", "will", "may", "might", "must", "about", "over", "under", "above", "below", "between", "among", "through", "into", "onto", "up", "down", "off", "out", "around", "after", "before", "during", "since", "while", "if", "then", "else", "when", "where", "why", "how", "what", "which", "who", "whom", "whose", "whether", "either", "neither", "both", "each", "every", "any", "all", "some", "many", "few", "several", "most", "more", "less", "least", "such", "own", "other", "another", "same", "different", "new", "old", "ceo", "ceos", "organization"]
 
+"""
+get_model_response takes an input of a prompt question and returns the response from the chose LLM model.
+"""
 def get_model_response(promptQ):
     """
     Query the chatGPT model with a prompt and return the response
@@ -138,9 +142,9 @@ for entry in results:
     vectorizer = TfidfVectorizer()
     tfidf_matrix = vectorizer.fit_transform([entry['response'], referenceAnswer])
     cosine_sim = cosine_similarity(tfidf_matrix[0:1], tfidf_matrix[1:2])
-    #print(f"Prompt: {entry['prompt']}\nResponse: {entry['response']}\nTotal Characters: {len(entry['response'])}\nCosine Sim: {cosine_sim}")
     entry['cosine_sim'] = cosine_sim # add cosine similarity to entry dict
 
+# sort based on cosine similarity
 results = sorted(results, key=lambda x: x['cosine_sim'], reverse=True)
 print("\nTop 5 responses by cosine similarity to reference answer:")
 for entry in results[:5]:
@@ -156,7 +160,3 @@ sorted_tf = sorted(term_freq_dict.items(), key=lambda x: x[1], reverse=True)
 print("\nTop 15 terms by term frequency:")
 for term, freq in sorted_tf[:15]:
     print(f"{term}: {freq}")
-
-# other ideas
-    # should refernce answer just be the answer of the question WE phrased?
-    # move for entry in results into for prompt in prompts loop to avoid 2 loops

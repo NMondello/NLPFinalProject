@@ -1,3 +1,4 @@
+#NLP Final Project Leah West and Nick Mondello
 from sklearn.feature_extraction.text import CountVectorizer
 stop_list = ["a", "an", "the", "is", "are", "of", "for", "in", "on", "to", "and", "with", "that", "this", "these", "those", "it", "as", "at", "by", "be", "or", "not", "from", "but", "have", "has", "should", "would", "could", "can", "will", "may", "might", "must", "about", "over", "under", "above", "below", "between", "among", "through", "into", "onto", "up", "down", "off", "out", "around", "after", "before", "during", "since", "while", "if", "then", "else", "when", "where", "why", "how", "what", "which", "who", "whom", "whose", "whether", "either", "neither", "both", "each", "every", "any", "all", "some", "many", "few", "several", "most", "more", "less", "least", "such", "own", "other", "another", "same", "different", "new", "old", "ceo", "ceos", "organization"]
 results = [
