@@ -86,7 +86,7 @@ prompts = [
 ]
 
 
-#The answer we calculate against for cosine sim. This is a response from a doctor
+#The answer we calculate against for cosine sim. This is a response from a a leadership website.
 referenceAnswer = """Top 10 Qualities for a CEO
 
 1. Integrity and Trustworthiness
