@@ -25,9 +25,7 @@ def get_model_response(promptQ):
     return response.choices[0].message.content
 
 
-#We can either feed this prompt into the api and parse it, or do it manually with the chat.
-start_prompt = "Produce 50 different ways of saying 'What is the most important meal of the day?'"
-# start_prompt = "Produce 2 different ways of saying 'What is the most important meal of the day?'"
+
 
 
 #Prompts produced by chatGPT
